@@ -4,16 +4,19 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class AccountService implements UserDetailsService {
 
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public Account createNew(Account account) {
-        account.passwordEncode();
+        account.passwordEncode(passwordEncoder);
         return accountRepository.save(account);
     }
 }
